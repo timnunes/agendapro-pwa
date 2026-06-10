@@ -9,37 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('favicon').href = CONFIG.appIcon;
     document.getElementById('apple-icon').href = CONFIG.appIcon;
 
-    // iframe
-    const iframe = document.getElementById('main-iframe');
-    iframe.src = CONFIG.iframeUrl;
-
-    // Body Background
+    // Mostra tela de splash
     document.body.style.backgroundColor = CONFIG.backgroundColor;
-    document.getElementById('offline-overlay').style.backgroundColor = CONFIG.backgroundColor;
 
-    // Initial Online/Offline Check
-    updateOnlineStatus();
+    // Redireciona para o Streamlit após 1.2 segundos
+    setTimeout(function() {
+        window.location.href = CONFIG.iframeUrl;
+    }, 1200);
 });
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js').then(function(registration) {
-            console.log('ServiceWorker registrado com sucesso: ', registration.scope);
+            console.log('ServiceWorker registrado: ', registration.scope);
         }, function(err) {
             console.log('ServiceWorker falhou: ', err);
         });
     });
 }
-
-// Online/Offline Handler
-function updateOnlineStatus() {
-    const overlay = document.getElementById('offline-overlay');
-    if (navigator.onLine) {
-        overlay.style.display = 'none';
-    } else {
-        overlay.style.display = 'flex';
-    }
-}
-window.addEventListener('online', updateOnlineStatus);
-window.addEventListener('offline', updateOnlineStatus);
